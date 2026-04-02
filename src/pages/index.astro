@@ -1,48 +1,53 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../components/FormattedDate.astro';
+
+// Mengambil tulisan terbaru
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+).slice(0, 3); // Ambil 3 tulisan teratas saja
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="id">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 	</head>
 	<body>
 		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+		<main style="max-width: 800px; margin: 0 auto; padding: 4rem 1.5rem; font-family: 'Georgia', serif;">
+			<section style="text-align: center; margin-bottom: 5rem;">
+				<h1 style="font-size: 3.5rem; font-weight: normal; letter-spacing: 2px; color: #1c1917; margin-bottom: 0.5rem;">Nalar Teras</h1>
+				<p style="font-size: 1rem; letter-spacing: 6px; color: #78716c; text-transform: uppercase;">Amor Fati</p>
+
+				<div style="margin: 5rem auto; max-width: 600px; padding: 3rem; border: 1px solid #e7e5e4; position: relative;">
+    <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #FDFBF7; padding: 0 15px; color: #a8a29e; font-size: 0.8rem; letter-spacing: 3px;">ADAGIUM</div>
+    <p style="font-size: 1.4rem; font-style: italic; color: #44403c; line-height: 1.8; text-align: center; margin: 0;">
+        "Jangan menuntut agar hal-hal terjadi seperti yang kau inginkan, tetapi harapkanlah hal-hal terjadi sebagaimana mestinya."
+    </p>
+    <p style="margin-top: 2rem; font-size: 0.9rem; color: #78716c; letter-spacing: 2px; text-align: center; text-transform: uppercase;">— EPICTETUS</p>
+</div>
+			</section>
+
+			<section style="font-family: system-ui, sans-serif;">
+				<h2 style="font-size: 1.2rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #1c1917; margin-bottom: 2rem;">Catatan Terbaru</h2>
+				<ul style="list-style-type: none; padding: 0;">
+					{posts.map((post) => (
+						<li style="margin-bottom: 1.5rem;">
+							<a href={`/blog/${post.slug}/`} style="text-decoration: none; color: #292524; display: flex; justify-content: space-between; align-items: baseline;">
+								<span style="font-size: 1.2rem; font-family: 'Georgia', serif;">{post.data.title}</span>
+								<span style="color: #a8a29e; font-size: 0.9rem; white-space: nowrap; margin-left: 1rem;">
+									<FormattedDate date={post.data.pubDate} />
+								</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			</section>
 		</main>
 		<Footer />
 	</body>
