@@ -8,8 +8,9 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.com',
-  integrations: [mdx(), sitemap()],
+  site: 'https://dynamic-mermaid-ea8647.netlify.app', // Ganti dengan URL asli Kang Mas
+  integrations: [sitemap()],
+
 
   vite: {
     plugins: [tailwindcss()],
