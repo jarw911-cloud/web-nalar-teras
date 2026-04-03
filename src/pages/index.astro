@@ -6,49 +6,93 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 
-// Mengambil tulisan terbaru
+// Mengambil 10 tulisan terbaru dari folder blog
 const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-).slice(0, 3); // Ambil 3 tulisan teratas saja
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+).slice(0, 10);
+
+// Koleksi Adagium Stoik (Bisa Kang Mas tambah terus sampai ratusan)
+// --- BAGIAN MESIN ADAGIUM TERUPDATE ---
+const adagiums = [
+    { text: "Jangan menuntut agar hal-hal terjadi seperti yang kau inginkan, tetapi harapkanlah hal-hal terjadi sebagaimana mestinya.", author: "EPICTETUS" },
+    { text: "Kebahagiaan hidupmu bergantung pada kualitas pikiranmu.", author: "MARCUS AURELIUS" },
+    { text: "Kita menderita lebih sering dalam imajinasi daripada dalam kenyataan.", author: "SENECA" },
+    { text: "Balas dendam terbaik adalah dengan tidak menjadi seperti orang yang melakukan kejahatan itu.", author: "MARCUS AURELIUS" },
+    { text: "Bukan karena perkara itu sulit kita tidak berani, tapi karena kita tidak berani maka perkara itu menjadi sulit.", author: "SENECA" },
+    { text: "Kekayaan tidak terdiri dari memiliki banyak harta, tetapi memiliki sedikit keinginan.", author: "EPICTETUS" },
+    { text: "Kamu memiliki kekuasaan atas pikiranmu - bukan kejadian di luar sana. Sadari ini, dan kamu akan menemukan kekuatan.", author: "MARCUS AURELIUS" },
+    { text: "Waktu yang kita miliki tidaklah singkat, kitalah yang membuang banyak waktu.", author: "SENECA" },
+    { text: "Hanya orang terpelajar yang merdeka.", author: "EPICTETUS" },
+    { text: "Segala sesuatu yang kita dengar adalah pendapat, bukan fakta. Segala sesuatu yang kita lihat adalah perspektif, bukan kebenaran.", author: "MARCUS AURELIUS" },
+    { text: "Jika engkau mencapai sesuatu yang mulia dengan kerja keras, lelahnya segera hilang, namun kemuliaannya tetap abadi.", author: "MUSONIUS RUFUS" },
+    { text: "Kematian tersenyum pada kita semua, yang bisa dilakukan manusia hanyalah balas tersenyum.", author: "MARCUS AURELIUS" },
+    { text: "Tidak ada orang yang merdeka jika ia tidak bisa memerintah dirinya sendiri.", author: "EPICTETUS" },
+    { text: "Kesulitan menguatkan pikiran, seperti halnya kerja keras menguatkan tubuh.", author: "SENECA" },
+    { text: "Jiwa ternoda oleh warna pikiran-pikirannya.", author: "MARCUS AURELIUS" },
+    { text: "Mulailah segera untuk hidup, dan anggaplah setiap hari sebagai kehidupan yang terpisah.", author: "SENECA" },
+    { text: "Kendali utama dalam hidup adalah memisahkan hal-hal yang bisa dikendalikan dan yang tidak.", author: "EPICTETUS" },
+    { text: "Hidup ini sangat singkat dan penuh kecemasan bagi mereka yang melupakan masa lalu, mengabaikan masa kini, dan takut akan masa depan.", author: "SENECA" },
+    { text: "Kesejahteraan diwujudkan melalui langkah-langkah kecil, namun ia sungguh bukan hal kecil.", author: "ZENO OF CITIUM" },
+    { text: "Satu-satunya cara menuju kebahagiaan adalah dengan berhenti mencemaskan hal-hal yang berada di luar jangkauan kehendak kita.", author: "EPICTETUS" },
+    { text: "Terimalah hal-hal yang dikaitkan oleh takdir kepadamu, dan cintailah orang-orang yang dipertemukan takdir denganmu, namun lakukanlah dengan segenap hati.", author: "MARCUS AURELIUS" },
+    { text: "Bukan orang yang memiliki terlalu sedikit, melainkan orang yang mendambakan lebih banyak, itulah yang miskin.", author: "SENECA" },
+    { text: "Ingatlah berapa lama engkau telah menunda hal-hal ini dan berapa kali para dewa memberimu kesempatan, namun engkau tidak menggunakannya.", author: "MARCUS AURELIUS" },
+    { text: "Seseorang tidak bisa belajar apa yang dia pikir sudah dia ketahui.", author: "EPICTETUS" },
+    { text: "Di mana pun ada manusia, di situ ada kesempatan untuk berbuat baik.", author: "SENECA" },
+    { text: "Jangan menjelaskan filosofimu. Wujudkanlah.", author: "EPICTETUS" },
+    { text: "Hambatan untuk bertindak justru memajukan tindakan. Apa yang menghalangi jalan justru menjadi jalan.", author: "MARCUS AURELIUS" },
+    { text: "Amor Fati: Cintailah takdirmu, karena itulah satu-satunya kenyataan yang kau miliki.", author: "NIETZSCHE / STOIC PHILOSOPHY" },
+    { text: "Kebebasan adalah satu-satunya tujuan yang berharga dalam hidup. Ia didapat dengan mengabaikan hal-hal yang berada di luar kendali kita.", author: "EPICTETUS" },
+    { text: "Setiap hari adalah sebuah awal baru bagi orang yang bijak.", author: "SENECA" }
+];
+
+// Mesin Pemilih Otomatis (Berganti tiap hari pada jam 00:00)
+const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
+const selectedAdagium = adagiums[dayOfYear % adagiums.length];
 ---
 
 <!doctype html>
 <html lang="id">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main style="max-width: 800px; margin: 0 auto; padding: 4rem 1.5rem; font-family: 'Georgia', serif;">
-			<section style="text-align: center; margin-bottom: 5rem;">
-				<h1 style="font-size: 3.5rem; font-weight: normal; letter-spacing: 2px; color: #1c1917; margin-bottom: 0.5rem;">Nalar Teras</h1>
-				<p style="font-size: 1rem; letter-spacing: 6px; color: #78716c; text-transform: uppercase;">Amor Fati</p>
+    <head>
+        <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    </head>
+    <body style="background-color: var(--paper); margin: 0; color: #292524;">
+        <Header />
+        
+        <main style="max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'Georgia', serif;">
+            
+            <section style="margin-bottom: 4rem;">
+                <div style="margin: 0 auto; max-width: 600px; padding: 3rem; border: 1px solid #e7e5e4; position: relative; background: var(--paper);">
+                    <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--paper); padding: 0 15px; color: #a8a29e; font-size: 0.8rem; letter-spacing: 3px; white-space: nowrap;">
+                        ADAGIUM HARI INI
+                    </div>
+                    
+                    <p style="font-size: 1.4rem; font-style: italic; color: #44403c; line-height: 1.8; text-align: center; margin: 0;">
+                        "{selectedAdagium.text}"
+                    </p>
+                    <p style="margin-top: 2rem; font-size: 0.9rem; color: #78716c; letter-spacing: 2px; text-align: center; text-transform: uppercase;">
+                        - {selectedAdagium.author} -
+                    </p>
+                </div>
+            </section>
 
-				<div style="margin: 5rem auto; max-width: 600px; padding: 3rem; border: 1px solid #e7e5e4; position: relative;">
-    <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #FDFBF7; padding: 0 15px; color: #a8a29e; font-size: 0.8rem; letter-spacing: 3px;">ADAGIUM</div>
-    <p style="font-size: 1.4rem; font-style: italic; color: #44403c; line-height: 1.8; text-align: center; margin: 0;">
-        "Jangan menuntut agar hal-hal terjadi seperti yang kau inginkan, tetapi harapkanlah hal-hal terjadi sebagaimana mestinya."
-    </p>
-    <p style="margin-top: 2rem; font-size: 0.9rem; color: #78716c; letter-spacing: 2px; text-align: center; text-transform: uppercase;">— EPICTETUS</p>
-</div>
-			</section>
-
-			<section style="font-family: system-ui, sans-serif;">
-				<h2 style="font-size: 1.2rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #1c1917; margin-bottom: 2rem;">Catatan Terbaru</h2>
-				<ul style="list-style-type: none; padding: 0;">
-					{posts.map((post) => (
-						<li style="margin-bottom: 1.5rem;">
-							<a href={`/blog/${post.slug}/`} style="text-decoration: none; color: #292524; display: flex; justify-content: space-between; align-items: baseline;">
-								<span style="font-size: 1.2rem; font-family: 'Georgia', serif;">{post.data.title}</span>
-								<span style="color: #a8a29e; font-size: 0.9rem; white-space: nowrap; margin-left: 1rem;">
-									<FormattedDate date={post.data.pubDate} />
-								</span>
-							</a>
-						</li>
-					))}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
+            <section style="font-family: system-ui, sans-serif;">
+                <h2 style="font-size: 1.2rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #1c1917; margin-bottom: 2rem; text-align: center;">Catatan Terbaru</h2>
+                <ul style="list-style-type: none; padding: 0;">
+                    {posts.map((post) => (
+                        <li style="margin-bottom: 1.5rem; border-bottom: 1px dashed #e7e5e4; padding-bottom: 1rem;">
+                            <a href={`/blog/${post.slug}/`} style="text-decoration: none; color: #292524; display: flex; justify-content: space-between; align-items: baseline;">
+                                <span style="font-size: 1.2rem; font-family: 'Georgia', serif;">{post.data.title}</span>
+                                <span style="color: #a8a29e; font-size: 0.9rem; white-space: nowrap; margin-left: 1rem;">
+                                    <FormattedDate date={post.data.pubDate} />
+                                </span>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </section>
+        </main>
+        
+        <Footer />
+    </body>
 </html>

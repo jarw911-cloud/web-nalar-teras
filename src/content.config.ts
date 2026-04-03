@@ -18,3 +18,7 @@ const blog = defineCollection({
 });
 
 export const collections = { blog };
+export default defineConfig({
+  site: 'https://dynamic-mermaid-ea8647.netlify.app', // Ganti dengan URL asli Kang Mas
+  integrations: [sitemap()],
+});
